@@ -1,5 +1,5 @@
 import express from "express"
-const router = express()
+const router = express.Router()
 
 import productRouter from "./products.mjs"
 router.use('/products', productRouter)
