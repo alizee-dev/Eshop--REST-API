@@ -1,6 +1,7 @@
 import express from "express"
 const app = express()
 import mongoose from "mongoose";
+import cors from "cors"
 
 //if (process.env.NODE_ENV !== "production") {
 //    import("dotenv").then(dotenv => dotenv.config());
@@ -15,6 +16,12 @@ import indexRouter from "./routes/index.mjs"
 const port = process.env.PORT || 9000
 
 app.use(express.json())
+const corsOptions = {
+  origin: "*",
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  credentials: true,
+}
+app.use(cors(corsOptions))
 import path from "path"
 import { fileURLToPath } from "url"
 
