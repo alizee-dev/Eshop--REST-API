@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MAISON ÉLÈVE — Bespoke Evening Wear</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collection</a>
+      <a href="admin.html" class="nav-link">Atelier</a>
+    </div>
+    <a href="index.html" class="brand">MAISON ÉLÈVE</a>
+    <div class="nav-right">
+      <a href="login.html" class="nav-link">Sign In</a>
+      <a href="cart.html" class="nav-link cart-link">Cart <span class="cart-count" id="cartCount">0</span></a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-text">
+      <p class="hero-sub">Bespoke Evening Wear</p>
+      <h1 class="hero-title">Crafted<br/><em>for you.</em></h1>
+      <p class="hero-desc">Each piece is made to your exact measurements.<br/>No compromises. No returns needed.</p>
+    </div>
+    <div class="hero-line"></div>
+  </header>
+
+  <section class="collection">
+    <div class="section-header">
+      <span class="section-label">SS 2025</span>
+      <h2 class="section-title">The Collection</h2>
+    </div>
+    <div class="products-grid" id="productsGrid">
+      <!-- Products injected by JS -->
+    </div>
+  </section>
+
+  <!-- Modal: Add to Cart -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">&times;</button>
+      <div class="modal-content">
+        <div class="modal-image-wrap">
+          <img src="" alt="" id="modalImage" class="modal-image"/>
+        </div>
+        <div class="modal-details">
+          <p class="modal-label">Bespoke Order</p>
+          <h2 class="modal-title" id="modalName"></h2>
+          <p class="modal-desc" id="modalDesc"></p>
+          <p class="modal-price" id="modalPrice"></p>
+
+          <form class="modal-form" id="addToCartForm">
+            <input type="hidden" id="modalRef"/>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Chest (cm)</label>
+                <input type="number" id="chest" placeholder="e.g. 88" required/>
+              </div>
+              <div class="form-group">
+                <label>Waist (cm)</label>
+                <input type="number" id="waist" placeholder="e.g. 68" required/>
+              </div>
+              <div class="form-group">
+                <label>Hips (cm)</label>
+                <input type="number" id="hips" placeholder="e.g. 94" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <input type="number" id="quantity" value="1" min="1" required/>
+            </div>
+            <button type="submit" class="btn-primary">Add to Cart</button>
+            <p class="form-msg" id="formMsg"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p class="footer-brand">MAISON ÉLÈVE</p>
+    <p class="footer-note">All garments are made to measure. Allow 6–8 weeks for delivery.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

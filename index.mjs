@@ -15,6 +15,13 @@ import indexRouter from "./routes/index.mjs"
 const port = process.env.PORT || 9000
 
 app.use(express.json())
+import path from "path"
+import { fileURLToPath } from "url"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+app.use(express.static(path.join(__dirname, "public")))
 app.use(bodyParser.urlencoded({ limit : '10mb', extended : false }))
 
 app.use("/", indexRouter)

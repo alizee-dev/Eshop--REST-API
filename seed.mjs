@@ -12,46 +12,46 @@ const password_mongo = process.env.mongo_password
 const products = [
   {
     reference: 1,
-    name: "Midnight Velvet Gown",
-    description: "Floor-length velvet gown with a deep V-neckline and subtle train. Made to your exact measurements.",
+    name: "Rose Satin Slip Gown",
+    description: "Floor-length satin gown in soft rose with delicate thin straps and a plunging open back. Effortlessly sensual and refined.",
     price: 389.99,
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=800"
+    image: "https://images.unsplash.com/photo-1613424935149-c8efd5c41e91?w=800"
   },
   {
     reference: 2,
-    name: "Ivory Silk Draped Dress",
-    description: "Elegant draped silk dress with one shoulder design. Timeless and refined for black tie events.",
+    name: "Champagne Tulle Gown",
+    description: "Dreamy champagne tulle gown with layered ruffles and a sweeping train. Romantic and ethereal for the grandest occasions.",
     price: 459.99,
-    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800"
+    image: "https://plus.unsplash.com/premium_photo-1664367340541-6ce74a264a65?w=800"
   },
   {
     reference: 3,
-    name: "Noir Crepe Column Dress",
-    description: "Sleek column dress in matte crepe with a low back and minimalist silhouette.",
+    name: "Noir Crepe Evening Gown",
+    description: "Strapless black gown with a pencil skirt silhouette and dramatic flared three-quarter sleeves. Sophisticated and bold.",
     price: 329.99,
-    image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800"
+    image: "https://images.unsplash.com/photo-1562077365-9e9ed7bd25fa?w=800"
   },
   {
     reference: 4,
-    name: "Blush Tulle Ball Gown",
-    description: "Romantic full-volume tulle ball gown with delicate embroidery at the bodice.",
+    name: "Aubergine Tulle Ball Gown",
+    description: "Strapless ball gown in deep aubergine with a full tulle skirt adorned with delicate floral embroidery. Opulent and romantic.",
     price: 529.99,
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800"
-  },
-  {
+    image: "https://images.unsplash.com/photo-1568252542512-9fe8fe9c87bb?w=800"  
+},
+{
     reference: 5,
-    name: "Emerald Satin Slip Dress",
-    description: "Bias-cut satin slip dress in deep emerald. Simple, sensual and utterly elegant.",
-    price: 299.99,
-    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800"
+    name: "Champagne Pearl Gown",
+    description: "Champagne gown with a structured bustier and long sleeves delicately embroidered with pearls. Opulent and truly bespoke.",
+    price: 599.99,
+    image: "https://images.unsplash.com/photo-1675029865483-31f84044faae?w=800"
   },
   {
     reference: 6,
-    name: "Champagne Lace Evening Gown",
-    description: "Head-to-toe lace evening gown with long sleeves and a sweeping skirt. Custom fitted.",
-    price: 599.99,
-    image: "https://images.unsplash.com/photo-1622122201714-77da0ca8e5d2?w=800"
-  }
+    name: "White Bohemian Gown",
+    description: "Flowing white cotton gown with intricate embroidery and flared three-quarter sleeves. Free-spirited elegance for outdoor evening events.",
+    price: 299.99,
+    image: "https://images.unsplash.com/photo-1664322046189-196a30a7f5e6?w=800"
+  },
 ]
 
 async function seed() {
@@ -61,21 +61,12 @@ async function seed() {
       { useNewUrlParser: true, useUnifiedTopology: true }
     )
     console.log("Connected to MongoDB")
-
-    // Clean existing data
     await Product.deleteMany({})
-    console.log("Existing products deleted")
-
     await Cart.deleteMany({})
-    console.log("Existing carts deleted")
-
     await Order.deleteMany({})
-    console.log("Existing orders deleted")    
-
-    // Insert new products
+    console.log("Collections cleared")
     await Product.insertMany(products)
     console.log("6 products inserted successfully")
-
     await mongoose.disconnect()
     console.log("Done.")
   } catch (error) {

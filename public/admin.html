@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Atelier — MAISON ÉLÈVE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="index.html" class="nav-link">Collection</a>
+      <a href="admin.html" class="nav-link">Atelier</a>
+    </div>
+    <a href="index.html" class="brand">MAISON ÉLÈVE</a>
+    <div class="nav-right">
+      <a href="login.html" class="nav-link" id="signInLink">Sign In</a>
+      <a href="cart.html" class="nav-link cart-link">Cart <span class="cart-count" id="cartCount">0</span></a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <p class="section-label">Staff Only</p>
+    <h1 class="page-title">Atelier</h1>
+  </div>
+
+  <div class="admin-gate" id="adminGate">
+    <p>You must be signed in as admin or employee to access this page.</p>
+    <a href="login.html" class="btn-primary" style="display:inline-block;margin-top:1.5rem;">Sign In</a>
+  </div>
+
+  <section class="admin-section" id="adminSection" style="display:none;">
+
+    <!-- Add Product -->
+    <div class="admin-panel">
+      <h2 class="admin-panel-title">Add a New Piece</h2>
+      <form id="addProductForm" class="admin-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Reference (number)</label>
+            <input type="number" id="reference" required/>
+          </div>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="name" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" id="description" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price (€)</label>
+            <input type="number" id="price" step="0.01" required/>
+          </div>
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" id="image" required/>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Add to Collection</button>
+        <p class="form-msg" id="addMsg"></p>
+      </form>
+    </div>
+
+    <!-- Products List -->
+    <div class="admin-panel">
+      <h2 class="admin-panel-title">Manage Collection</h2>
+      <div class="admin-products" id="adminProducts">
+        <!-- injected by JS -->
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <p class="footer-brand">MAISON ÉLÈVE</p>
+    <p class="footer-note">All garments are made to measure. Allow 6–8 weeks for delivery.</p>
+  </footer>
+
+  <script src="app.js"></script>
+  <script>
+    const token = localStorage.getItem('token')
+    const role = localStorage.getItem('role')
+
+    if (!token || (role !== 'admin' && role !== 'employee')) {
+      document.getElementById('adminGate').style.display = 'block'
+    } else {
+      document.getElementById('adminSection').style.display = 'block'
+      document.getElementById('signInLink').textContent = 'Sign Out'
+      document.getElementById('signInLink').onclick = (e) => {
+        e.preventDefault()
+        localStorage.removeItem('token')
+        localStorage.removeItem('role')
+        window.location.href = 'login.html'
+      }
+      loadAdminProducts()
+    }
+
+    async function loadAdminProducts() {
+      const res = await fetch('/products')
+      const products = await res.json()
+      const container = document.getElementById('adminProducts')
+      container.innerHTML = ''
+      products.forEach(p => {
+        const row = document.createElement('div')
+        row.className = 'admin-product-row'
+        row.innerHTML = `
+          <img src="${p.image}" alt="${p.name}" class="admin-thumb"/>
+          <div class="admin-product-info">
+            <span class="admin-product-name">${p.name}</span>
+            <span class="admin-product-ref">Ref. ${p.reference} — €${p.price}</span>
+          </div>
+          <button class="btn-delete" onclick="deleteProduct(${p.reference})">Remove</button>
+        `
+        container.appendChild(row)
+      })
+    }
+
+    async function deleteProduct(ref) {
+      if (!confirm('Remove this piece from the collection?')) return
+      const res = await fetch(`/products/${ref}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (res.ok) loadAdminProducts()
+      else alert('Could not delete product.')
+    }
+
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('addMsg')
+      const body = {
+        reference: parseInt(document.getElementById('reference').value),
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value,
+        price: parseFloat(document.getElementById('price').value),
+        image: document.getElementById('image').value
+      }
+      const res = await fetch('/products/add-product', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      })
+      if (res.ok) {
+        msg.style.color = '#c9a96e'
+        msg.textContent = 'Piece added successfully.'
+        e.target.reset()
+        loadAdminProducts()
+      } else {
+        const data = await res.text()
+        msg.style.color = '#c0675a'
+        msg.textContent = data || 'Error adding product.'
+      }
+    })
+  </script>
+</body>
+</html>
