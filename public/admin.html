@@ -33,44 +33,112 @@
 
   <section class="admin-section" id="adminSection" style="display:none;">
 
-    <!-- Add Product -->
-    <div class="admin-panel">
-      <h2 class="admin-panel-title">Add a New Piece</h2>
-      <form id="addProductForm" class="admin-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Reference (number)</label>
-            <input type="number" id="reference" required/>
-          </div>
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" id="name" required/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <input type="text" id="description" required/>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Price (€)</label>
-            <input type="number" id="price" step="0.01" required/>
-          </div>
-          <div class="form-group">
-            <label>Image URL</label>
-            <input type="text" id="image" required/>
-          </div>
-        </div>
-        <button type="submit" class="btn-primary">Add to Collection</button>
-        <p class="form-msg" id="addMsg"></p>
-      </form>
+    <!-- Tab navigation -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="showTab('products')">Products</button>
+      <button class="admin-tab" onclick="showTab('orders')" id="tabOrders">Orders</button>
+      <button class="admin-tab" onclick="showTab('employees')" id="tabEmployees">Employees</button>
+      <button class="admin-tab" onclick="showTab('contact')">Contact</button>
     </div>
 
-    <!-- Products List -->
-    <div class="admin-panel">
-      <h2 class="admin-panel-title">Manage Collection</h2>
-      <div class="admin-products" id="adminProducts">
-        <!-- injected by JS -->
+    <!-- PRODUCTS TAB -->
+    <div class="admin-tab-content" id="tabProducts">
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">Add a New Piece</h2>
+        <form id="addProductForm" class="admin-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Reference (number)</label>
+              <input type="number" id="reference" required/>
+            </div>
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="name" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input type="text" id="description" required/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Price (€)</label>
+              <input type="number" id="price" step="0.01" required/>
+            </div>
+            <div class="form-group">
+              <label>Image URL</label>
+              <input type="text" id="image" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">Add to Collection</button>
+          <p class="form-msg" id="addMsg"></p>
+        </form>
+      </div>
+
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">Manage Collection</h2>
+        <div class="admin-products" id="adminProducts"></div>
+      </div>
+    </div>
+
+    <!-- ORDERS TAB (admin only) -->
+    <div class="admin-tab-content" id="tabOrdersContent" style="display:none;">
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">All Orders</h2>
+        <div id="ordersList" class="admin-products"></div>
+      </div>
+    </div>
+
+    <!-- EMPLOYEES TAB (admin only) -->
+    <div class="admin-tab-content" id="tabEmployeesContent" style="display:none;">
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">Add an Employee</h2>
+        <form id="addEmployeeForm" class="admin-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="empName" required/>
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="empEmail" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="empPassword" required/>
+          </div>
+          <button type="submit" class="btn-primary">Create Employee Account</button>
+          <p class="form-msg" id="empMsg"></p>
+        </form>
+      </div>
+
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">Manage Employees</h2>
+        <div id="employeesList" class="admin-products"></div>
+      </div>
+    </div>
+
+    <!-- CONTACT TAB -->
+    <div class="admin-tab-content" id="tabContact" style="display:none;">
+      <div class="admin-panel">
+        <h2 class="admin-panel-title">Send a Message</h2>
+        <form id="contactForm" class="admin-form">
+          <div class="form-group">
+            <label>Your Email</label>
+            <input type="email" id="contactEmail" required/>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" id="contactSubject" required/>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <input type="text" id="contactContent" required/>
+          </div>
+          <button type="submit" class="btn-primary">Send Message</button>
+          <p class="form-msg" id="contactMsg"></p>
+        </form>
       </div>
     </div>
 
@@ -97,9 +165,36 @@
         localStorage.removeItem('role')
         window.location.href = 'login.html'
       }
+
+      // Hide admin-only tabs for employees
+      if (role !== 'admin') {
+        document.getElementById('tabOrders').style.display = 'none'
+        document.getElementById('tabEmployees').style.display = 'none'
+      }
+
       loadAdminProducts()
     }
 
+    // ── Tab switching ──
+    function showTab(tab) {
+      document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none')
+      document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'))
+      event.target.classList.add('active')
+
+      if (tab === 'products') {
+        document.getElementById('tabProducts').style.display = 'block'
+      } else if (tab === 'orders') {
+        document.getElementById('tabOrdersContent').style.display = 'block'
+        loadOrders()
+      } else if (tab === 'employees') {
+        document.getElementById('tabEmployeesContent').style.display = 'block'
+        loadEmployees()
+      } else if (tab === 'contact') {
+        document.getElementById('tabContact').style.display = 'block'
+      }
+    }
+
+    // ── Products ──
     async function loadAdminProducts() {
       const res = await fetch('/products')
       const products = await res.json()
@@ -142,10 +237,7 @@
       }
       const res = await fetch('/products/add-product', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(body)
       })
       if (res.ok) {
@@ -157,6 +249,127 @@
         const data = await res.text()
         msg.style.color = '#c0675a'
         msg.textContent = data || 'Error adding product.'
+      }
+    })
+
+    // ── Orders ──
+    async function loadOrders() {
+      const res = await fetch('/cart/orders', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const orders = await res.json()
+      const container = document.getElementById('ordersList')
+      container.innerHTML = ''
+
+      if (!orders.length) {
+        container.innerHTML = '<p style="color:var(--muted);font-style:italic;">No orders yet.</p>'
+        return
+      }
+
+      orders.forEach(order => {
+        const row = document.createElement('div')
+        row.className = 'admin-product-row'
+        row.style.flexDirection = 'column'
+        row.style.alignItems = 'flex-start'
+        row.style.gap = '0.5rem'
+        row.innerHTML = `
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <span class="admin-product-name">${order.firstname} ${order.lastname}</span>
+            <span class="admin-product-ref" style="color:var(--gold)">${order.status}</span>
+          </div>
+          <span class="admin-product-ref">${order.email} — ${order.address}</span>
+          <span class="admin-product-ref">${order.items.length} item(s) — Order ID: ${order._id}</span>
+        `
+        container.appendChild(row)
+      })
+    }
+
+    // ── Employees ──
+    async function loadEmployees() {
+      const res = await fetch('/users/employee', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const employees = await res.json()
+      const container = document.getElementById('employeesList')
+      container.innerHTML = ''
+
+      if (!employees.length) {
+        container.innerHTML = '<p style="color:var(--muted);font-style:italic;">No employees yet.</p>'
+        return
+      }
+
+      employees.forEach(emp => {
+        const row = document.createElement('div')
+        row.className = 'admin-product-row'
+        row.innerHTML = `
+          <div class="admin-product-info">
+            <span class="admin-product-name">${emp.name}</span>
+            <span class="admin-product-ref">${emp.email} — ${emp.role}</span>
+          </div>
+          <button class="btn-delete" onclick="deleteEmployee('${emp.name}')">Remove</button>
+        `
+        container.appendChild(row)
+      })
+    }
+
+    async function deleteEmployee(name) {
+      if (!confirm(`Remove ${name} from the team?`)) return
+      const res = await fetch('/users/employee', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name })
+      })
+      if (res.ok) loadEmployees()
+      else alert('Could not delete employee.')
+    }
+
+    document.getElementById('addEmployeeForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('empMsg')
+      const body = {
+        name: document.getElementById('empName').value,
+        email: document.getElementById('empEmail').value,
+        password: document.getElementById('empPassword').value
+      }
+      const res = await fetch('/users/employee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body)
+      })
+      const data = await res.json()
+      if (res.ok) {
+        msg.style.color = '#c9a96e'
+        msg.textContent = 'Employee added successfully.'
+        e.target.reset()
+        loadEmployees()
+      } else {
+        msg.style.color = '#c0675a'
+        msg.textContent = data.error || 'Error adding employee.'
+      }
+    })
+
+    // ── Contact ──
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const msg = document.getElementById('contactMsg')
+      const body = {
+        email: document.getElementById('contactEmail').value,
+        subject: document.getElementById('contactSubject').value,
+        content: document.getElementById('contactContent').value
+      }
+      const res = await fetch('/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      const data = await res.json()
+      if (res.ok) {
+        msg.style.color = '#c9a96e'
+        msg.textContent = data.message
+        e.target.reset()
+      } else {
+        msg.style.color = '#c0675a'
+        msg.textContent = 'Error sending message.'
       }
     })
   </script>
