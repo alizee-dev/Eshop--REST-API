@@ -66,10 +66,18 @@ node index.mjs
 ### Authentication
 | Method | Route | Description |
 |--------|-------|-------------|
-| POST | /register/admin | Create an admin account |
-| POST | /register/employee | Create an employee account |
 | POST | /login/admin | Admin login |
 | POST | /login/employee | Employee login |
+
+### Users
+| Method | Route | Description | Auth required |
+|--------|-------|-------------|---------------|
+| POST | /users/admin | Create an admin account | No |
+| POST | /users/employee | Create an employee account | Yes (admin) |
+| GET | /users/employee | Get all employees | Yes (admin) |
+| GET | /users/employee/:userId | Get one employee | Yes (admin) |
+| PATCH | /users/employee/:userId | Update an employee | Yes (admin) |
+| DELETE | /users/employee | Delete an employee | Yes (admin) |
 
 ### Products
 | Method | Route | Description | Auth required |
@@ -80,12 +88,19 @@ node index.mjs
 | DELETE | /products/:productId | Delete a product | Yes (admin/employee) |
 | PATCH | /products/:productId | Update a product | Yes (admin/employee) |
 
-### Cart
+### Cart & Orders
+| Method | Route | Description | Auth required |
+|--------|-------|-------------|---------------|
+| POST | /cart/:productId | Add a product to cart | No |
+| GET | /cart | View current cart | No |
+| POST | /cart/checkout | Checkout (Stripe if configured) | No |
+| GET | /cart/orders | Get all orders | Yes (admin) |
+| GET | /cart/orders/:orderId | Get one order | Yes (admin) |
+
+### Email
 | Method | Route | Description |
 |--------|-------|-------------|
-| POST | /cart/:productId | Add a product to cart |
-| GET | /cart | View current cart |
-| POST | /cart/checkout | Place an order |
+| POST | /email | Send a contact email |
 
 ## Authentication
 
