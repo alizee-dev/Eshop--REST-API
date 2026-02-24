@@ -116,16 +116,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Checkout
-
-
 export default router
 
 // npm install express express-session cookie-parser
 // npm install uuid
-
-
-
-
-//npm install express express-session cookie-parser
-//npm install uuid

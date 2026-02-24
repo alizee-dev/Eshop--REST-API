@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const authenticateUser = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  console.log(process.env.SECRET_KEY);
+  //console.log(process.env.SECRET_KEY);
 
   if (!authHeader) 
   return res.status(403).json({ message: "Token missing. Access denied." });
