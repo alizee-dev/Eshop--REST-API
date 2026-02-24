@@ -110,10 +110,42 @@ Authorization: Bearer <token>
 ```
 The token is obtained at login and is valid for 3 days.
 
+## Payment
+
+This project integrates **Stripe** for payment processing.
+To enable Stripe, add your secret key to the `.env` file:
+```
+STRIPE_KEY=sk_test_...
+```
+For testing, use Stripe's test card:
+- Number: `4242 4242 4242 4242`
+- Date: any future date
+- CVC: any 3 digits
+
+Without a Stripe key, the app falls back to a simple order confirmation.
+
+## Email
+
+Contact form powered by **Mailgun** via Nodemailer.
+To enable, add your Mailgun credentials to `.env`:
+```
+MAILGUN_KEY=your_mailgun_api_key
+MAILGUN_DOMAIN=your_mailgun_domain
+CONTACT_EMAIL=your_email@example.com
+```
+
 ## Notes
 
-- The frontend is intentionally kept simple (HTML/CSS/JS) and would benefit from 
-  a React rewrite as a next step.
-- All garments are made to measure — the cart collects chest, waist and hip 
-  measurements for each order.
-- Passwords stored in the database are hashed with bcrypt.
+- Built as my first fullstack team project during web development training.
+- I was responsible for the **backend**. The frontend was originally assigned to other team members but could not be completed — it was later rebuilt with the assistance of AI (Claude Sonnet 4.6).
+- The frontend is intentionally kept in HTML/CSS/JS and would benefit from a React rewrite as a next step.
+- All garments are made to measure — the cart collects chest, waist and hip measurements for each order.
+- Passwords are hashed with bcrypt.
+- JWT tokens are valid for 3 days.
+
+## Future improvements
+
+- Stripe webhook to update order status after payment
+- React frontend rewrite
+- User-facing order tracking
+- Mailgun integration for order confirmation emails
