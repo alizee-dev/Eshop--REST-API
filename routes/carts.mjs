@@ -21,57 +21,6 @@ router.use(session({
     cookie: { secure: false }
 }))
 
-// Add an item to the cart
-router.post('/:productId', async (req, res) => {
-    try {
-        let userId = req.session.userId
-        if (!userId) {
-            userId = uuidv4()
-            req.session.userId = userId
-        }
-
-        const { productId } = req.params
-        const { quantity, chest, waist, hips } = req.body
-
-        const product = await Product.findOne({ reference: productId })
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' })
-        }
-
-        const cartItem = new Cart({
-            userId: userId,
-            reference: product.reference,
-            quantity,
-            chest,
-            waist,
-            hips,
-            price: product.price,
-            image: product.image
-        })
-
-        await cartItem.save()
-        res.status(201).json({ message: 'Item added to cart' })
-    } catch (error) {
-        console.error('Error adding item to cart:', error)
-        res.status(500).json({ message: 'Internal server error' })
-    }
-})
-
-// Retrieve cart items for the current user
-router.get('/', async (req, res) => {
-    try {
-        const userId = req.session.userId
-        if (!userId) {
-            return res.status(400).json({ message: 'No active session' })
-        }
-        const cartItems = await Cart.find({ userId })
-        res.json(cartItems)
-    } catch (error) {
-        console.error('Error fetching cart:', error)
-        res.status(500).json({ message: 'Internal server error' })
-    }
-})
-
 // Stripe checkout session
 router.post('/checkout', async (req, res) => {
     try {
@@ -124,7 +73,6 @@ router.post('/checkout', async (req, res) => {
             quantity: item.quantity
         }))
 
-        // Shipping fee
         line_items.push({
             price_data: {
                 currency: 'eur',
@@ -170,6 +118,57 @@ router.post('/checkout', async (req, res) => {
     }
 })
 
+// Add an item to the cart
+router.post('/:productId', async (req, res) => {
+    try {
+        let userId = req.session.userId
+        if (!userId) {
+            userId = uuidv4()
+            req.session.userId = userId
+        }
+
+        const { productId } = req.params
+        const { quantity, chest, waist, hips } = req.body
+
+        const product = await Product.findOne({ reference: productId })
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' })
+        }
+
+        const cartItem = new Cart({
+            userId: userId,
+            reference: product.reference,
+            quantity,
+            chest,
+            waist,
+            hips,
+            price: product.price,
+            image: product.image
+        })
+
+        await cartItem.save()
+        res.status(201).json({ message: 'Item added to cart' })
+    } catch (error) {
+        console.error('Error adding item to cart:', error)
+        res.status(500).json({ message: 'Internal server error' })
+    }
+})
+
+// Retrieve cart items for the current user
+router.get('/', async (req, res) => {
+    try {
+        const userId = req.session.userId
+        if (!userId) {
+            return res.status(400).json({ message: 'No active session' })
+        }
+        const cartItems = await Cart.find({ userId })
+        res.json(cartItems)
+    } catch (error) {
+        console.error('Error fetching cart:', error)
+        res.status(500).json({ message: 'Internal server error' })
+    }
+})
+
 // Get all orders (admin only)
 router.get('/orders', authenticateUser, checkRole(["admin"]), async (req, res) => {
     try {
@@ -197,6 +196,3 @@ router.get('/orders/:orderId', authenticateUser, checkRole(["admin"]), async (re
 })
 
 export default router
-
-// npm install express express-session cookie-parser
-// npm install uuid

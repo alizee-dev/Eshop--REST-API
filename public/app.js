@@ -167,8 +167,7 @@ if (checkoutForm) {
       firstname: document.getElementById('firstname').value,
       lastname: document.getElementById('lastname').value,
       email: document.getElementById('email').value,
-      address: document.getElementById('address').value,
-      bankDetails: document.getElementById('bankDetails').value
+      address: document.getElementById('address').value
     }
 
     try {
@@ -177,15 +176,20 @@ if (checkoutForm) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       })
+      const data = await res.json()
       if (res.ok) {
-        msg.style.color = '#c9a96e'
-        msg.textContent = 'Order placed. Thank you — we will be in touch shortly.'
-        document.getElementById('cartItems').innerHTML = ''
-        document.getElementById('cartSummary').style.display = 'none'
-        document.getElementById('cartEmpty').style.display = 'block'
-        updateCartCount()
+        if (data.url) {
+          // Stripe redirect
+          window.location.href = data.url
+        } else {
+          msg.style.color = '#c9a96e'
+          msg.textContent = 'Order placed. Thank you — we will be in touch shortly.'
+          document.getElementById('cartItems').innerHTML = ''
+          document.getElementById('cartSummary').style.display = 'none'
+          document.getElementById('cartEmpty').style.display = 'block'
+          updateCartCount()
+        }
       } else {
-        const data = await res.json()
         msg.style.color = '#c0675a'
         msg.textContent = data.message || 'Could not place order.'
       }
