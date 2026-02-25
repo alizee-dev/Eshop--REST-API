@@ -134,6 +134,18 @@ MAILGUN_DOMAIN=your_mailgun_domain
 CONTACT_EMAIL=your_email@example.com
 ```
 
+## API Documentation
+
+A full Postman collection is available in the repository: `MaisonEleve.postman_collection.json`
+
+It covers all 19 endpoints organized in 5 folders: Auth, Users, Products, Cart/Orders, and Email.
+
+To use it:
+1. Import the file in Postman
+2. Create an environment with `base_url = http://localhost:9000` and an empty `token` variable
+3. Run **Login Admin** first — the token is saved automatically via a test script
+4. All protected routes will use `{{token}}` automatically
+
 ## Notes
 
 - Built as my first fullstack team project during web development training.
@@ -142,6 +154,7 @@ CONTACT_EMAIL=your_email@example.com
 - All garments are made to measure — the cart collects chest, waist and hip measurements for each order.
 - Passwords are hashed with bcrypt.
 - JWT tokens are valid for 3 days.
+
 
 ## Future improvements
 
