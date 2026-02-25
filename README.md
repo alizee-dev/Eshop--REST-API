@@ -7,6 +7,14 @@ I worked on the **backend** alongside a teammate. The frontend was originally as
 to other team members but could not be completed in time — it was later rebuilt 
 with the assistance of AI (Claude Sonnet 4.6) to present a functional, end-to-end portfolio piece.
 
+## Project Demo
+
+### Customer Shop Experience
+![Shop Demo](./demoShop.gif)
+
+### Admin Dashboard Experience
+![Admin Demo](./demoAdmin.gif)
+
 ## Tech Stack
 
 - **Runtime**: Node.js
