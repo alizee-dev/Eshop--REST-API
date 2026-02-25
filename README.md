@@ -10,10 +10,10 @@ with the assistance of AI (Claude Sonnet 4.6) to present a functional, end-to-en
 ## Project Demo
 
 ### Customer Shop Experience
-![Shop Demo](./demoShop.gif)
+![Shop Demo](./screenshots/demoShop.gif)
 
 ### Admin Dashboard Experience
-![Admin Demo](./demoAdmin.gif)
+![Admin Demo](./screenshots/demoAdmin.gif)
 
 ## Tech Stack
 
